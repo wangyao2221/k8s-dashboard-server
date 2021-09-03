@@ -27,7 +27,7 @@ func NewDeploymentRouter(engine *gin.RouterGroup) *DeploymentRouter {
 }
 
 func (dr *DeploymentRouter) Register()  {
-	dr.engine.GET("/deployment", dr.Deployment)
+	dr.engine.GET("/deployment/all", dr.Deployment)
 }
 
 func (dr *DeploymentRouter) Deployment(ctx *gin.Context) {

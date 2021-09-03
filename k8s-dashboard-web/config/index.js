@@ -10,7 +10,16 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      "/server": {
+        // 把 localhost:8080 代理为下面的地址
+        target: "http://localhost:8080", // localhost:8080代理为这个地址
+        changeOrigin: true, // 是否跨域
+        pathRewrite: {   // 重写，如果开发环境地址中不需要service-core，那么可以将其重写为''
+          "^/server": "/"
+        }
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

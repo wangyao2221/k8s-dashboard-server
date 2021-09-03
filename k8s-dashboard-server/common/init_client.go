@@ -32,7 +32,7 @@ func GetRestConf() (restConf *rest.Config, err error) {
 	)
 
 	// 读kubeConfig文件
-	if kubeConfig, err = ioutil.ReadFile("./conf/admin.conf"); err != nil {
+	if kubeConfig, err = ioutil.ReadFile("./conf/docker-desktop-k8s.yaml"); err != nil {
 		return nil, err
 	}
 	// 生成rest client配置
