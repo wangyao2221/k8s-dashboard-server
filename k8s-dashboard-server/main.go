@@ -1,14 +1,30 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"k8s-dashboard-server/routers"
+	"fmt"
+
+	"k8s-dashboard-server/conifgs"
+	"k8s-dashboard-server/pkg/env"
+	"k8s-dashboard-server/pkg/logger"
+	"k8s-dashboard-server/pkg/timeutil"
 )
 
 func main() {
-	r := gin.Default()
+	// 初始化 access logger
+	accessLogger, err := logger.NewJSONLogger(
+		logger.WithDisableConsole(),
+		logger.WithField("domain", fmt.Sprintf("%s[%s]", configs.ProjectName, env.Active().Value())),
+		logger.WithTimeLayout(timeutil.CSTLayout),
+		logger.WithFileP(configs.ProjectAccessLogFile),
+	)
+	if err != nil {
+		panic(err)
+	}
 
-	router := routers.RootRouter{Engine: r}
-	router.Register()
-	r.Run(":8080")
+	// 进程结束前将日志缓存刷入文件
+	defer func() {
+		_ = accessLogger.Sync()
+		//_ = cronLogger.Sync()
+	}()
+
 }
