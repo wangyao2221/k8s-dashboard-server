@@ -4,12 +4,10 @@ import (
 	"errors"
 	"go.uber.org/zap"
 
-	"k8s-dashboard-server/conifgs"
 	"k8s-dashboard-server/internal/pkg/core"
 	"k8s-dashboard-server/internal/repository/mysql"
 	"k8s-dashboard-server/internal/repository/redis"
 	"k8s-dashboard-server/internal/router/interceptor"
-	"k8s-dashboard-server/pkg/file"
 )
 
 // 处理路由信息
@@ -19,7 +17,6 @@ type resource struct {
 	db           mysql.Repo
 	cache        redis.Repo
 	interceptors interceptor.Interceptor
-	//cronServer   cron.Server
 }
 
 type Server struct {
@@ -38,25 +35,19 @@ func NewHTTPServer(logger *zap.Logger) (*Server, error) {
 	r := new(resource)
 	r.logger = logger
 
-	openBrowserUri := configs.ProjectDomain + configs.ProjectPort
-	_, ok := file.IsExists(configs.ProjectInstallMark)
-	if !ok { // 未安装
-		openBrowserUri += "/install"
-	} else { // 已安装
-		// 初始化 DB
-		dbRepo, err := mysql.New()
-		if err != nil {
-			logger.Fatal("new db err", zap.Error(err))
-		}
-		r.db = dbRepo
-
-		// 初始化 Cache
-		cacheRepo, err := redis.New()
-		if err != nil {
-			logger.Fatal("new cache err", zap.Error(err))
-		}
-		r.cache = cacheRepo
+	// 初始化 DB
+	dbRepo, err := mysql.New()
+	if err != nil {
+		logger.Fatal("new db err", zap.Error(err))
 	}
+	r.db = dbRepo
+
+	// 初始化 Cache
+	cacheRepo, err := redis.New()
+	if err != nil {
+		logger.Fatal("new cache err", zap.Error(err))
+	}
+	r.cache = cacheRepo
 
 	// 封装一层engin的优势在这里，可以把一下默认参数的配置简化(例如这里的WithOption)
 	mux, err := core.New(

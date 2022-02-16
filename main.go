@@ -25,7 +25,6 @@ func main() {
 	// 进程结束前将日志缓存刷入文件
 	defer func() {
 		_ = accessLogger.Sync()
-		//_ = cronLogger.Sync()
 	}()
 
 	s, err := router.NewHTTPServer(accessLogger)

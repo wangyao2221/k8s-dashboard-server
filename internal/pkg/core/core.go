@@ -40,30 +40,22 @@ func WithEnableCors() Option {
 	}
 }
 
-// 因为以面向接口的思维写代码，所以只有Mux是暴露出去的
-// 而Mux是接口，没有属性，所以即使下面Engine是public的，外部也无法访问(外部只知道Mux接口，不知道mux实现)
-// 所以要想使用GROUP,GET,POST,PUT,DELETE...就只能让Mux去封装一遍gin的这些方法
-// 对外暴露接口的方式好处是，采用新的web框架(gin之外的)时其他代码不用修改，只需要重现一个Mux就可以
-type Mux interface {
-	Run(addr ...string) (err error)
-}
-
-type mux struct {
+type Mux struct {
 	Engine *gin.Engine
 }
 
-func (m *mux) Run(addr ...string) (err error) {
+func (m *Mux) Run(addr ...string) (err error) {
 	return m.Engine.Run(addr...)
 }
 
 func New(logger *zap.Logger, options ...Option) (Mux, error) {
 	if logger == nil {
-		return nil, errors.New("logger required")
+		return Mux{}, errors.New("logger required")
 	}
 
 	// TODO 看一下gin.ReleaseMode的作用
 	gin.SetMode(gin.ReleaseMode)
-	mux := &mux{
+	mux := Mux{
 		Engine: gin.New(),
 	}
 
