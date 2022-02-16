@@ -1,4 +1,4 @@
-package helper
+package user
 
 import (
 	"k8s-dashboard-server/internal/repository/mysql"

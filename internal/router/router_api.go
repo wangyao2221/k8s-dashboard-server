@@ -1,13 +1,13 @@
 package router
 
-import "k8s-dashboard-server/internal/api/helper"
+import "k8s-dashboard-server/internal/api/user"
 
 func setApiRouter(r *resource) {
-	// helper
-	helperHandler := helper.New(r.logger, r.db, r.cache)
+	// user
+	userHandler := user.New(r.logger, r.db, r.cache)
 
-	helper := r.mux.Engine.Group("/helper")
+	user := r.mux.Engine.Group("/api")
 	{
-		helper.GET("/md5", helperHandler.Md5())
+		user.GET("/user", userHandler.List())
 	}
 }
