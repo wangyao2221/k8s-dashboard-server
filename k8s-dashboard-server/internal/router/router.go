@@ -2,10 +2,10 @@ package router
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 
-	configs "k8s-dashboard-server/conifgs"
+	"k8s-dashboard-server/conifgs"
+	"k8s-dashboard-server/internal/pkg/core"
 	"k8s-dashboard-server/internal/repository/mysql"
 	"k8s-dashboard-server/internal/repository/redis"
 	"k8s-dashboard-server/internal/router/interceptor"
@@ -14,7 +14,7 @@ import (
 
 // 处理路由信息
 type resource struct {
-	engine       *gin.Engine
+	mux          core.Mux
 	logger       *zap.Logger
 	db           mysql.Repo
 	cache        redis.Repo
@@ -23,11 +23,13 @@ type resource struct {
 }
 
 type Server struct {
-	Engine *gin.Engine
-	Db     mysql.Repo
-	Cache  redis.Repo
+	Mux   core.Mux
+	Db    mysql.Repo
+	Cache redis.Repo
 }
 
+// Server是衔接gin配置和router的中间桥梁
+// 巧妙地关联了两者，又对两者进行了解耦(两者的代码互不依赖)
 func NewHTTPServer(logger *zap.Logger) (*Server, error) {
 	if logger == nil {
 		return nil, errors.New("logger required")
@@ -56,7 +58,24 @@ func NewHTTPServer(logger *zap.Logger) (*Server, error) {
 		r.cache = cacheRepo
 	}
 
+	// 封装一层engin的优势在这里，可以把一下默认参数的配置简化(例如这里的WithOption)
+	mux, err := core.New(
+		logger,
+		core.WithEnableCors(),
+	)
+
+	if err != nil {
+		panic(err)
+	}
+
+	r.mux = mux
+	r.interceptors = interceptor.New(logger, r.cache, r.db)
+
+	// 设置路由
+	setApiRouter(r)
+
 	s := new(Server)
+	s.Mux = mux
 	s.Db = r.db
 	s.Cache = r.cache
 

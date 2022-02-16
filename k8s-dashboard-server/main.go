@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"k8s-dashboard-server/conifgs"
+	"k8s-dashboard-server/internal/router"
 	"k8s-dashboard-server/pkg/env"
 	"k8s-dashboard-server/pkg/logger"
 	"k8s-dashboard-server/pkg/timeutil"
@@ -27,4 +28,12 @@ func main() {
 		//_ = cronLogger.Sync()
 	}()
 
+	s, err := router.NewHTTPServer(accessLogger)
+	if err != nil {
+		panic(err)
+	}
+
+	s.Mux.Run(configs.ProjectPort)
+
+	// 优雅关闭
 }
