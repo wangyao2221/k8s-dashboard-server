@@ -8,6 +8,6 @@ func setApiRouter(r *resource) {
 
 	user := r.mux.Engine.Group("/api")
 	{
-		user.GET("/user", userHandler.List())
+		user.POST("/user/list", userHandler.List())
 	}
 }

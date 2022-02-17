@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cast"
 	"net/http"
@@ -49,6 +50,7 @@ func (h *Handler) List() gin.HandlerFunc {
 		res := new(listResponse)
 
 		if err := ctx.ShouldBindJSON(req); err != nil {
+			fmt.Println(err)
 			ctx.AbortWithError(http.StatusBadRequest, err)
 			return
 		}
@@ -66,10 +68,10 @@ func (h *Handler) List() gin.HandlerFunc {
 		searchData := new(user.SearchData)
 		searchData.Page = page
 		searchData.PageSize = pageSize
-		searchData.Username = req.Username
 
 		resListData, err := h.userService.List(ctx, searchData)
 		if err != nil {
+			fmt.Println(err)
 			ctx.AbortWithError(http.StatusBadRequest, err)
 			return
 		}
