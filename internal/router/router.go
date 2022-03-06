@@ -3,6 +3,7 @@ package router
 import (
 	"errors"
 	"go.uber.org/zap"
+	"k8s-dashboard-server/internal/repository/k8s"
 
 	"k8s-dashboard-server/configs"
 	"k8s-dashboard-server/internal/pkg/core"
@@ -18,6 +19,7 @@ type resource struct {
 	logger       *zap.Logger
 	db           mysql.Repo
 	cache        redis.Repo
+	k8s          k8s.Repo
 	interceptors interceptor.Interceptor
 	//cronServer   cron.Server
 }
@@ -44,18 +46,25 @@ func NewHTTPServer(logger *zap.Logger) (*Server, error) {
 		openBrowserUri += "/install"
 	} else { // 已安装
 		// 初始化 DB
-		dbRepo, err := mysql.New()
-		if err != nil {
-			logger.Fatal("new db err", zap.Error(err))
-		}
-		r.db = dbRepo
+		//dbRepo, err := mysql.New()
+		//if err != nil {
+		//	logger.Fatal("new db err", zap.Error(err))
+		//}
+		//r.db = dbRepo
+		//
+		//// 初始化 Cache
+		//cacheRepo, err := redis.New()
+		//if err != nil {
+		//	logger.Fatal("new cache err", zap.Error(err))
+		//}
+		//r.cache = cacheRepo
 
-		// 初始化 Cache
-		cacheRepo, err := redis.New()
+		// 初始化k8s
+		k8sRepo, err := k8s.New()
 		if err != nil {
 			logger.Fatal("new cache err", zap.Error(err))
 		}
-		r.cache = cacheRepo
+		r.k8s = k8sRepo
 	}
 
 	// 封装一层engin的优势在这里，可以把一下默认参数的配置简化(例如这里的WithOption)
@@ -73,9 +82,6 @@ func NewHTTPServer(logger *zap.Logger) (*Server, error) {
 
 	// 设置路由
 	setApiRouter(r)
-
-	// 设置k8s路由
-	setK8sApiRouter(r)
 
 	s := new(Server)
 	s.Mux = mux

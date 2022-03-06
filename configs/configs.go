@@ -58,6 +58,10 @@ type Config struct {
 		MinIdleConns int    `toml:"minIdleConns"`
 	} `toml:"redis"`
 
+	K8S struct {
+		ConfigPath string `toml:"configPath"`
+	} `toml:"k8s"`
+
 	Mail struct {
 		Host string `toml:"host"`
 		Port int    `toml:"port"`

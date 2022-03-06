@@ -39,3 +39,6 @@
   minidleconns = 5
   pass = ""
   poolsize = 10
+
+[k8s]
+  configPath = "D:\\Code\\GolandProjects\\src\\k8s-dashboard-server\\configs\\config"
