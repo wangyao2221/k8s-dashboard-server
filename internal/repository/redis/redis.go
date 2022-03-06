@@ -7,7 +7,7 @@ import (
 
 	"github.com/go-redis/redis/v7"
 
-	"k8s-dashboard-server/conifgs"
+	"k8s-dashboard-server/configs"
 )
 
 //type Option func(*option)

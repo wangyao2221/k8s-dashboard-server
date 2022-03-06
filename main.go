@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"k8s-dashboard-server/conifgs"
+	"k8s-dashboard-server/configs"
 	"k8s-dashboard-server/internal/router"
 	"k8s-dashboard-server/pkg/env"
 	"k8s-dashboard-server/pkg/logger"

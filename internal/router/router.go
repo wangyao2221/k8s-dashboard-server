@@ -4,7 +4,7 @@ import (
 	"errors"
 	"go.uber.org/zap"
 
-	"k8s-dashboard-server/conifgs"
+	"k8s-dashboard-server/configs"
 	"k8s-dashboard-server/internal/pkg/core"
 	"k8s-dashboard-server/internal/repository/mysql"
 	"k8s-dashboard-server/internal/repository/redis"
@@ -73,6 +73,9 @@ func NewHTTPServer(logger *zap.Logger) (*Server, error) {
 
 	// 设置路由
 	setApiRouter(r)
+
+	// 设置k8s路由
+	setK8sApiRouter(r)
 
 	s := new(Server)
 	s.Mux = mux

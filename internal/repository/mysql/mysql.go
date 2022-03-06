@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm/schema"
 	"time"
 
-	"k8s-dashboard-server/conifgs"
+	"k8s-dashboard-server/configs"
 )
 
 // Predicate is a string that acts as a condition in the where clause

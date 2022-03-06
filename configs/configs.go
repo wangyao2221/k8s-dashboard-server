@@ -23,6 +23,12 @@ import (
 var config = new(Config)
 
 type Config struct {
+	ApiServer struct {
+		Auth struct {
+			Token string `toml:"auth"`
+		}
+	} `toml:"apiserver"`
+
 	MySQL struct {
 		Read struct {
 			Addr string `toml:"addr"`
