@@ -244,9 +244,9 @@ func New(logger *zap.Logger, options ...Option) (Mux, error) {
 			// endregion
 
 			// region 正确返回
-			response = context.getPayload()
-			if response != nil {
-				ctx.JSON(http.StatusOK, response)
+			payload := context.getPayload()
+			if payload != nil {
+				ctx.JSON(http.StatusOK, payload)
 			}
 
 			decodedURL, _ := url.QueryUnescape(ctx.Request.URL.RequestURI())

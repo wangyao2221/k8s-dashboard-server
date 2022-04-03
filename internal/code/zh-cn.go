@@ -61,5 +61,5 @@ var zhCNText = map[int]string{
 	CronDetailError:  "获取定时任务详情失败",
 	CronExecuteError: "手动执行定时任务失败",
 
-	K8sK8sError: "获取K8S资源列表错误",
+	K8sError: "获取K8S资源列表错误",
 }

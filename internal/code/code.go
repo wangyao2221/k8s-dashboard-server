@@ -14,6 +14,8 @@ type Failure struct {
 }
 
 const (
+	Success = 20000
+
 	ServerError        = 10101
 	TooManyRequests    = 10102
 	ParamBindError     = 10103
@@ -74,7 +76,7 @@ const (
 	CronDetailError  = 20404
 	CronExecuteError = 20405
 
-	K8sK8sError = 20503
+	K8sError = 20503
 )
 
 func Text(code int) string {
